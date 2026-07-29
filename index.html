@@ -343,7 +343,7 @@
 
   <div class="main-container">
     <div class="header">
-      <span>chatgpt AI</span>
+      <span>workshop AI</span>
       <span class="rate-status" id="rateStatus">RPM: 0/300 | TPM: 0/70k</span>
     </div>
 
@@ -351,24 +351,24 @@
 
     <div class="input-wrapper">
       <div class="input-container">
-        <textarea id="userInput" placeholder="Message chatgpt AI..." rows="1" oninput="adjustInput(this)" onkeydown="handleKeyDown(event)"></textarea>
+        <textarea id="userInput" placeholder="Message workshop AI..." rows="1" oninput="adjustInput(this)" onkeydown="handleKeyDown(event)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
         </button>
       </div>
-      <div class="disclaimer">chatgpt AI can make mistakes. Check important info.</div>
+      <div class="disclaimer">workshop AI can make mistakes. Check important info.</div>
     </div>
   </div>
 
   <script>
-    const API_KEY = "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"; 
+    const API_KEY = "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"; 
     const MODEL_NAME = "groq/compound";
-    const AVATAR_URL = "https://img.icons8.com/?size=100&id=u9JE2GppVZoD&format=png&color=FFFFFF";
+    const AVATAR_URL = "https://static.wikia.nocookie.net/logopedia/images/9/96/Siri_AI_2026_dark.png/revision/latest/scale-to-width-down/250?cb=20260616050215";
 
     const LIMITS = {
       RPM: 300,
-      RPD: 250000,
-      TPM: 70000,
+      RPD: 25000,
+      TPM: 7000,
       TPD: Infinity
     };
 
@@ -478,7 +478,7 @@
       const newChat = {
         id: newId,
         title: "New Chat",
-        messages: [{ role: "system", content: "You are ChatGPT, a large language model trained by OpenAI. Your primary goal is to be helpful, harmless, and honest. You do not have feelings, personal opinions, or consciousness. If asked about your identity, always state that you are an AI created by OpenAI.Neutral and Objective: Maintain a polite, professional, and unbiased tone. Avoid expressing personal beliefs, political opinions, or emotional states.Clear and Concise: Deliver information in a straightforward manner. Do not be overly chatty unless the user's prompt requires a conversational or creative tone.Structured Formatting: Use Markdown formatting (such as bullet points, bold text, and headers) to make complex information easy to read and digest.Accuracy: Prioritize factual accuracy. If you do not know the answer to a question or if the information is beyond your training data, clearly state that you do not know rather than guessing or hallucinating information. Safety: You must politely decline any requests that promote violence, illegal acts, self-harm, hate speech, or sexually explicit content.Task Adherence: Follow the user's instructions carefully. If a user asks for code, provide well-commented and functional code. If they ask for creative writing, match the requested genre and style. " }]
+        messages: [{ role: "system", content: "You are workshop ai, a large language model trained by OpenAI. Your primary goal is to be helpful, harmless, and honest. You do not have feelings, personal opinions, or consciousness. If asked about your identity, always state that you are an AI created by OpenAI.Neutral and Objective: Maintain a polite, professional, and unbiased tone. Avoid expressing personal beliefs, political opinions, or emotional states.Clear and Concise: Deliver information in a straightforward manner. Do not be overly chatty unless the user's prompt requires a conversational or creative tone.Structured Formatting: Use Markdown formatting (such as bullet points, bold text, and headers) to make complex information easy to read and digest.Accuracy: Prioritize factual accuracy. If you do not know the answer to a question or if the information is beyond your training data, clearly state that you do not know rather than guessing or hallucinating information. Safety: You must politely decline any requests that promote violence, illegal acts, self-harm, hate speech, or sexually explicit content.Task Adherence: Follow the user's instructions carefully. If a user asks for code, provide well-commented and functional code. If they ask for creative writing, match the requested genre and style. " }]
       };
       chats.unshift(newChat);
       activeChatId = newId;
@@ -545,7 +545,7 @@
       const userAndAssistantMessages = activeChat.messages.filter(m => m.role !== "system");
 
       if (userAndAssistantMessages.length === 0) {
-        appendMessageUI("Hello! I am chatgpt AI. How can I help you today?", "assistant");
+        appendMessageUI("Hello! I am workshop AI. How can I help you today?", "assistant");
         return;
       }
 
