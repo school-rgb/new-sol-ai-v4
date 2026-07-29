@@ -157,24 +157,52 @@
     .avatar {
       width: 32px;
       height: 32px;
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
       font-size: 13px;
       flex-shrink: 0;
-      overflow: hidden;
+      background: transparent;
     }
 
     .user .avatar {
       background-color: #5436da;
       color: white;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     .bot .avatar {
-      background-color: #10a37f;
-      color: white;
+      background-color: transparent;
+      border-radius: 0;
+      overflow: visible;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Pop / Shrink-and-Grow animation while generating an answer */
+    @keyframes pop-pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(0.75);
+      }
+      75% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .bot.answering .avatar img {
+      animation: pop-pulse 0.8s ease-in-out infinite;
     }
 
     /* Formatting & Text Styling */
@@ -198,6 +226,19 @@
       font-weight: 500;
     }
 
+    .text-body a:hover {
+      text-decoration: none;
+    }
+
+    .text-body ul, .text-body ol {
+      margin-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .text-body li {
+      margin-bottom: 4px;
+    }
+
     .text-body code {
       background-color: #2d2d2d;
       padding: 2px 6px;
@@ -213,6 +254,33 @@
       overflow-x: auto;
       margin-bottom: 12px;
       border: 1px solid #333;
+    }
+
+    .text-body pre code {
+      background: transparent;
+      padding: 0;
+    }
+
+    .text-body h1, .text-body h2, .text-body h3, .text-body h4 {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .text-body table {
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    .text-body th, .text-body td {
+      border: 1px solid #424242;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .text-body th {
+      background-color: #2d2d2d;
     }
 
     /* Input Footer Area */
@@ -238,6 +306,10 @@
       align-items: center;
       padding: 8px 12px 8px 18px;
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .input-container:focus-within {
+      border-color: #666;
     }
 
     textarea {
@@ -311,14 +383,14 @@
   </div>
 
   <script>
-    // Replace with your actual Groq API key or proxy backend endpoint
     const API_KEY = "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"; 
-    const MODEL_NAME = "llama-3.3-70b-versatile"; 
+    const MODEL_NAME = "groq/compound";
+    const AVATAR_URL = "https://console.groq.com/_next/static/media/groqlogo.d9ef68f8.svg";
 
     const LIMITS = {
       RPM: 300,
       RPD: 25000,
-      TPM: 70000, // Fixed: Matched limit to 70k to avoid false triggers
+      TPM: 70000,
       TPD: Infinity
     };
 
@@ -428,7 +500,7 @@
       const newChat = {
         id: newId,
         title: "New Chat",
-        messages: [{ role: "system", content: "your an ai too help with people with math and code an reding , and more " }]
+        messages: [{ role: "system", content: "You are a helpful assistant." }]
       };
       chats.unshift(newChat);
       activeChatId = newId;
@@ -495,7 +567,7 @@
       const userAndAssistantMessages = activeChat.messages.filter(m => m.role !== "system");
 
       if (userAndAssistantMessages.length === 0) {
-        appendMessageUI("Hello! How can I help you today?", "assistant");
+        appendMessageUI("Hello! I am workshop AI. How can I help you today?", "assistant");
         return;
       }
 
@@ -550,6 +622,11 @@
       adjustInput(inputField);
 
       const botTextElement = appendMessageUI("", "assistant");
+      const botMessageRow = botTextElement.closest(".message-row");
+      if (botMessageRow) {
+        botMessageRow.classList.add("answering");
+      }
+
       saveState();
 
       try {
@@ -563,22 +640,24 @@
             model: MODEL_NAME,
             messages: activeChat.messages,
             temperature: 0.6,
-            max_tokens: 4096,
+            max_completion_tokens: 8192,
+            top_p: 1,
             stream: true,
             stop: null,
-  compound_custom: {
-    tools: {
-      enabled_tools: [
-        web_search,
-        code_interpreter,
-        visit_website
-      ]
-    }
-  }
-});
+            compound_custom: {
+              tools: {
+                enabled_tools: [
+                  "web_search",
+                  "code_interpreter",
+                  "visit_website"
+                ]
+              }
+            }
+          })
         });
 
         if (!response.ok) {
+          if (botMessageRow) botMessageRow.classList.remove("answering");
           const errData = await response.json().catch(() => ({}));
           botTextElement.innerText = "Error: " + (errData.error?.message || "Failed to fetch response.");
           return;
@@ -611,7 +690,17 @@
             }
           }
 
-          if (done) break;
+          if (done) {
+            if (buffer.trim().startsWith("data: ") && buffer.trim() !== "data: [DONE]") {
+              try {
+                const parsed = JSON.parse(buffer.trim().slice(6));
+                const content = parsed.choices[0]?.delta?.content || "";
+                fullReply += content;
+                botTextElement.innerHTML = formatMessageContent(fullReply);
+              } catch (e) {}
+            }
+            break;
+          }
         }
 
         if (fullReply) {
@@ -621,8 +710,12 @@
         }
 
       } catch (err) {
-        botTextElement.innerText = "Network error. Please check your connection or CORS configuration.";
+        botTextElement.innerText = "Network error. Please check your connection.";
         console.error(err);
+      } finally {
+        if (botMessageRow) {
+          botMessageRow.classList.remove("answering");
+        }
       }
 
       saveState();
@@ -632,14 +725,22 @@
       const chatBox = document.getElementById("chatBox");
 
       const row = document.createElement("div");
-      row.classList.add("message-row", sender);
+      row.classList.add("message-row", sender === "user" ? "user" : "bot");
 
       const content = document.createElement("div");
       content.classList.add("message-content");
 
       const avatar = document.createElement("div");
       avatar.classList.add("avatar");
-      avatar.innerText = sender === "user" ? "U" : "AI";
+
+      if (sender === "user") {
+        avatar.innerText = "U";
+      } else {
+        const img = document.createElement("img");
+        img.src = AVATAR_URL;
+        img.alt = "workshop AI Avatar";
+        avatar.appendChild(img);
+      }
 
       const textBody = document.createElement("div");
       textBody.classList.add("text-body");
