@@ -384,7 +384,7 @@
 
   <div class="main-container">
     <div class="header">
-      <span>workshop AI</span>
+      <span>gemini AI</span>
       <span class="rate-status" id="rateStatus">RPM: 0/300 | TPM: 0/70k</span>
     </div>
 
@@ -392,24 +392,24 @@
 
     <div class="input-wrapper">
       <div class="input-container">
-        <textarea id="userInput" placeholder="Message workshop AI..." rows="1" oninput="adjustInput(this)" onkeydown="handleKeyDown(event)"></textarea>
+        <textarea id="userInput" placeholder="Message gemini AI..." rows="1" oninput="adjustInput(this)" onkeydown="handleKeyDown(event)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="handleSendOrStop()" title="Send message">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
         </button>
       </div>
-      <div class="disclaimer">workshop AI can make mistakes. Check important info.</div>
+      <div class="disclaimer">gemini AI can make mistakes. Check important info.</div>
     </div>
   </div>
 
   <script>
-    const API_KEY = "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"; 
+    const API_KEY = "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"; 
     const MODEL_NAME = "groq/compound";
-    const AVATAR_URL = "https://console.groq.com/_next/static/media/groqlogo.d9ef68f8.svg";
+    const AVATAR_URL = "https://www.gstatic.com/lamda/images/gemini_sparkle_4g_512_lt_f94943af3be039176192d.png";
 
     const LIMITS = {
-      RPM: 300,
-      RPD: 25000,
-      TPM: 70000,
+      RPM: 30,
+      RPD: 2500,
+      TPM: 7000,
       TPD: Infinity
     };
 
@@ -529,7 +529,7 @@
         sendBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`;
       } else {
         input.disabled = false;
-        input.placeholder = "Message workshop AI...";
+        input.placeholder = "Message gemini AI...";
         sendBtn.classList.remove("stop-btn");
         sendBtn.title = "Send message";
         sendBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
@@ -623,7 +623,7 @@
       const userAndAssistantMessages = activeChat.messages.filter(m => m.role !== "system");
 
       if (userAndAssistantMessages.length === 0) {
-        appendMessageUI("Hello! I am workshop AI. How can I help you today?", "assistant");
+        appendMessageUI("Hello! I am gemini AI. How can I help you today?", "assistant");
         return;
       }
 
@@ -700,7 +700,7 @@
             model: MODEL_NAME,
             messages: activeChat.messages,
             temperature: 0.6,
-            max_completion_tokens: 8192,
+            max_completion_tokens: 1000,
             top_p: 1,
             stream: true,
             stop: null,
