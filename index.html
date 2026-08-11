@@ -384,7 +384,7 @@
 
   <div class="main-container">
     <div class="header">
-      <span>gemini AI</span>
+      <span>gpt AI</span>
       <span class="rate-status" id="rateStatus">RPM: 0/300 | TPM: 0/70k</span>
     </div>
 
@@ -397,14 +397,14 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
         </button>
       </div>
-      <div class="disclaimer">gemini AI can make mistakes. Check important info.</div>
+      <div class="disclaimer">gpt AI can make mistakes. Check important info.</div>
     </div>
   </div>
 
   <script>
     const API_KEY = "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"; 
-    const MODEL_NAME = "qwen/qwen3.6-27b";
-    const AVATAR_URL = "https://www.gstatic.com/lamda/images/gemini_sparkle_4g_512_lt_f94943af3be039176192d.png";
+    const MODEL_NAME = "openai/gpt-oss-120b";
+    const AVATAR_URL = "https://console.groq.com/_next/static/media/openailogo.523c87a0.svg";
 
     const LIMITS = {
       RPM: 30,
@@ -523,13 +523,13 @@
 
       if (generating) {
         input.disabled = true;
-        input.placeholder = "AI is responding... (Click stop to cancel)";
+        input.placeholder = "gpt is responding... (Click stop to cancel)";
         sendBtn.classList.add("stop-btn", "active");
         sendBtn.title = "Stop response";
         sendBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`;
       } else {
         input.disabled = false;
-        input.placeholder = "Message gemini AI...";
+        input.placeholder = "Message gpt AI...";
         sendBtn.classList.remove("stop-btn");
         sendBtn.title = "Send message";
         sendBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
@@ -554,7 +554,7 @@
       const newChat = {
         id: newId,
         title: "New Chat",
-        messages: [{ role: "system", content: "You are a helpful assistant. your name is gemini." }]
+        messages: [{ role: "system", content: "You are a helpful assistant. your name is gpt ." }]
       };
       chats.unshift(newChat);
       activeChatId = newId;
