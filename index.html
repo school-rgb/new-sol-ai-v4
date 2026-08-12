@@ -392,7 +392,7 @@
 
     <div class="input-wrapper">
       <div class="input-container">
-        <textarea id="userInput" placeholder="Message gemini AI..." rows="1" oninput="adjustInput(this)" onkeydown="handleKeyDown(event)"></textarea>
+        <textarea id="userInput" placeholder="Message gpt AI..." rows="1" oninput="adjustInput(this)" onkeydown="handleKeyDown(event)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="handleSendOrStop()" title="Send message">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
         </button>
@@ -623,7 +623,7 @@
       const userAndAssistantMessages = activeChat.messages.filter(m => m.role !== "system");
 
       if (userAndAssistantMessages.length === 0) {
-        appendMessageUI("Hello! I am gemini AI. How can I help you today?", "assistant");
+        appendMessageUI("Hello! I am gpt AI. How can I help you today?", "assistant");
         return;
       }
 
